@@ -1,0 +1,28 @@
+{
+  "name": "mongox",
+  "version": "0.1.0",
+  "description": "mongodb driver extension for compressing document key string",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^2.0.23"
+  },
+  "devDependencies": {
+    "clone": "^1.0.1",
+    "should": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha test/mongox.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "no yet"
+  },
+  "keywords": [
+    "mongodb",
+    "compress",
+    "mongo performance",
+    "mongo io utilization"
+  ],
+  "author": "Tom <tong.zhilian@gmail.com>",
+  "license": "GPL-3.0"
+}
