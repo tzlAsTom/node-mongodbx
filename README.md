@@ -1,2 +1,2 @@
 # mongox
-mongodb driver extension focuses on compressing document key string
+mongodb driver extension for compressing document key string
