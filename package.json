@@ -1,5 +1,5 @@
 {
-  "name": "mongox",
+  "name": "mongodbx",
   "version": "0.1.0",
   "description": "A wrapper of Node.js mongoDB driver with document key compression",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "should": "^5.2.0"
   },
   "scripts": {
-    "test": "mocha test/mongox.test.js"
+    "test": "mocha test/mongodbx.test.js"
   },
   "repository": {
     "type": "git",

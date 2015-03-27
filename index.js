@@ -2,5 +2,5 @@
 
 module.exports = require('mongodb');
 
-module.exports.mongox = require('./lib/mongox');
+module.exports.mongodbx = require('./lib/mongodbx');
 
