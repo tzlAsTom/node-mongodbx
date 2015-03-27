@@ -2,7 +2,6 @@ var mongodb = require("../index")
     ,mongox = mongodb.mongox
     ,should = require('should');
 
-var clone = require('clone');
 
 describe("mongox encode/decodeBaseX", function(){
     it("encode && decode althorithm test", function(){
@@ -29,24 +28,28 @@ describe("mongox encode/decodeBaseX", function(){
 
 var collections = {
     'mongoxTest': {
+        columns: {'name': 'n', 'expireTime': 'e', 'deleteFlag': 'd'},
+        enableCompact: true,
+    },
+    'mongoxTestBase62Map': {
         columns: ['name', 'expireTime', 'deleteFlag'],
         enableCompact: true,
     },
     'noCompactCol': {
-        columns: ['name', 'expireTime', 'deleteFlag'],
+        columns: {'name': 'n', 'expireTime': 'e', 'deleteFlag': 'd'},
         enableCompact: false,
     },
     'dependOnBlockConfig': {
-        columns: ['name', 'expireTime', 'deleteFlag'],
+        columns: {'name': 'n', 'expireTime': 'e', 'deleteFlag': 'd'},
     },
 };
 var config = {
-    'collections': clone(collections),
+    'collections': collections,
     enableCompact: true
 };
 describe("mongox main", function(){
     beforeEach(function(){
-        mongox.initialize(clone(config));
+        mongox.initialize(config);
     });
     describe("initialize", function(){
         it("_id in columns", function(){
@@ -60,51 +63,62 @@ describe("mongox main", function(){
             }catch(e){};
         });
         it("enableCompact default false", function(){
-            mongox.initialize({collections:clone(collections)});
-            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { deleteFlag: 'c', expireTime: 'b', name: 'a' });
+            mongox.initialize({collections:collections});
+            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { name: 'n', expireTime: 'e', deleteFlag: 'd' });
+            should.deepEqual(mongox.getColumnNameMap('mongoxTestBase62Map'), { name: 'a', expireTime: 'b', deleteFlag: 'c' });
             should.deepEqual(mongox.getColumnNameMap('noCompactCol'), {});
             should.deepEqual(mongox.getColumnNameMap('dependOnBlockConfig'), {});
         });
         it("enableCompact outer true", function(){
-            mongox.initialize({collections:clone(collections), enableCompact: true});
-            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { deleteFlag: 'c', expireTime: 'b', name: 'a' });
+            mongox.initialize({collections:collections, enableCompact: true});
+            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { name: 'n', expireTime: 'e', deleteFlag: 'd' });
+            should.deepEqual(mongox.getColumnNameMap('mongoxTestBase62Map'), { name: 'a', expireTime: 'b', deleteFlag: 'c' });
             should.deepEqual(mongox.getColumnNameMap('noCompactCol'), {});
-            should.deepEqual(mongox.getColumnNameMap('dependOnBlockConfig'), { deleteFlag: 'c', expireTime: 'b', name: 'a' });
+            should.deepEqual(mongox.getColumnNameMap('dependOnBlockConfig'), { name: 'n', expireTime: 'e', deleteFlag: 'd' });
         });
         it("enableCompact outer false", function(){
-            mongox.initialize({collections:clone(collections), enableCompact: false});
-            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { deleteFlag: 'c', expireTime: 'b', name: 'a' });
+            mongox.initialize({collections:collections, enableCompact: false});
+            should.deepEqual(mongox.getColumnNameMap('mongoxTest'), { name: 'n', expireTime: 'e', deleteFlag: 'd' });
+            should.deepEqual(mongox.getColumnNameMap('mongoxTestBase62Map'), { name: 'a', expireTime: 'b', deleteFlag: 'c' });
             should.deepEqual(mongox.getColumnNameMap('noCompactCol'), {});
             should.deepEqual(mongox.getColumnNameMap('dependOnBlockConfig'), {});
         });
         it("addCollection", function(){
-            mongox.initialize({collections:clone(collections), enableCompact: false});
+            mongox.initialize({collections:collections, enableCompact: false});
             mongox.addCollection('newCollection', {
                 columns: ['name2', 'expireTime2', 'deleteFlag2'],
                 enableCompact: true,
             });
-            should.deepEqual(mongox.getColumnNameMap('newCollection'), { deleteFlag2: 'c', expireTime2: 'b', name2: 'a' });
+            should.deepEqual(mongox.getColumnNameMap('newCollection'), { name2: 'a', expireTime2: 'b', deleteFlag2: 'c' });
         });
     });
 
     describe("translate", function(){
         var orignalRecord = {_id: 1, name: 1, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4};
-        var compactRecord = {_id: 1, a: 1, b: 2, c: 3, notConfiguredKey: 4};
-        it("compress dot notation key", function(){
-            mongox.initialize({collections:clone(collections), enableCompact: false});
+        var compactRecord = {_id: 1, n: 1, e: 2, d: 3, notConfiguredKey: 4};
 
-            mongox.translateToCompact('name.0', 'mongoxTest').should.equal('a.0');
+        var orignalRecordBase62 = {_id: 1, name: 1, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4};
+        var compactRecordBase62 = {_id: 1, a: 1, b: 2, c: 3, notConfiguredKey: 4};
+        it("compress dot notation key", function(){
+            mongox.initialize({collections:collections, enableCompact: false});
+
+            mongox.translateToCompact('name.0', 'mongoxTest').should.equal('n.0');
             mongox.translateToCompact('notConfiguredKey.name', 'mongoxTest').should.equal('notConfiguredKey.name');
+            mongox.translateToCompact('name.0', 'mongoxTestBase62Map').should.equal('a.0');
+            mongox.translateToCompact('notConfiguredKey.name', 'mongoxTestBase62Map').should.equal('notConfiguredKey.name');
         });
 
         it("compress collection", function(){
-            mongox.initialize(clone(config));
+            mongox.initialize(config);
             should.deepEqual(mongox.translateRecordToCompact(orignalRecord, 'mongoxTest'), compactRecord);
             should.deepEqual(mongox.translateRecordToOrignal(compactRecord, 'mongoxTest'), orignalRecord);
+
+            should.deepEqual(mongox.translateRecordToCompact(orignalRecordBase62, 'mongoxTestBase62Map'), compactRecordBase62);
+            should.deepEqual(mongox.translateRecordToOrignal(compactRecordBase62, 'mongoxTestBase62Map'), orignalRecordBase62);
         });
 
         it("no compress collection", function(){
-            mongox.initialize(clone(config));
+            mongox.initialize(config);
             should.deepEqual(mongox.translateRecordToCompact(orignalRecord, 'noCompactCol'), orignalRecord);
             should.deepEqual(mongox.translateRecordToOrignal(compactRecord, 'noCompactCol'), compactRecord);
         });
@@ -113,28 +127,28 @@ describe("mongox main", function(){
             it('$or', function(){
                 should.deepEqual(mongox.translateQuerySelectorToCompact(
                     {$or: [{name:'name', deleteFlag: 1}, {notConfiguredKey:'notConfiguredKey'}]}, 'mongoxTest'),
-                    {$or: [{a:'name', c: 1}, {notConfiguredKey:'notConfiguredKey'}]}
+                    {$or: [{n:'name', d: 1}, {notConfiguredKey:'notConfiguredKey'}]}
                 );
             });
 
             it('$and', function(){
                 should.deepEqual(mongox.translateQuerySelectorToCompact(
                     {$and: [{name:'name', deleteFlag: 1}, {notConfiguredKey:'notConfiguredKey'}]}, 'mongoxTest'),
-                    {$and: [{a:'name', c: 1}, {notConfiguredKey:'notConfiguredKey'}]}
+                    {$and: [{n:'name', d: 1}, {notConfiguredKey:'notConfiguredKey'}]}
                 );
             });
 
             it('$nor', function(){
                 should.deepEqual(mongox.translateQuerySelectorToCompact(
                     {$nor: [{name:'name', deleteFlag: 1}, {notConfiguredKey:'notConfiguredKey'}]}, 'mongoxTest'),
-                    {$nor: [{a:'name', c: 1}, {notConfiguredKey:'notConfiguredKey'}]}
+                    {$nor: [{n:'name', d: 1}, {notConfiguredKey:'notConfiguredKey'}]}
                 );
             });
 
             it('complex', function(){
                 should.deepEqual(mongox.translateQuerySelectorToCompact(
                     {$and: [{name:'name'}, {$or:[{deleteFlag:1}, {expireTime:{$gt:123456789}}]}]}, 'mongoxTest'),
-                    {$and: [{a:'name'}, {$or:[{c:1}, {b:{$gt:123456789}}]}]}
+                    {$and: [{n:'name'}, {$or:[{d:1}, {e:{$gt:123456789}}]}]}
                 );
             });
         });
@@ -147,19 +161,19 @@ describe("mongox main", function(){
                     var orignalRecord = {};
                     orignalRecord[elem] = {name: 1, expireTime: 2};
                     compactRecord = {};
-                    compactRecord[elem] = {a: 1, b: 2};
+                    compactRecord[elem] = {n: 1, e: 2};
 
                     should.deepEqual(mongox.translateUpdateOperatorToCompact(orignalRecord, 'mongoxTest'), compactRecord);
                 });
             });
             it('$rename', function(){
-                should.deepEqual(mongox.translateUpdateOperatorToCompact({$rename:{'expireTime': 'deleteFlag'}}, 'mongoxTest'), {$rename:{b: 'c'}});
+                should.deepEqual(mongox.translateUpdateOperatorToCompact({$rename:{'expireTime': 'deleteFlag'}}, 'mongoxTest'), {$rename:{e: 'd'}});
             });
         });
 
         describe("translate sort array", function(){
             it("common", function(){
-                should.deepEqual(mongox.translateSortArrayToCompact([['name', 1], ['expireTime', -1]], 'mongoxTest'), [['a', 1], ['b', -1]]);
+                should.deepEqual(mongox.translateSortArrayToCompact([['name', 1], ['expireTime', -1]], 'mongoxTest'), [['n', 1], ['e', -1]]);
             });
         });
     });

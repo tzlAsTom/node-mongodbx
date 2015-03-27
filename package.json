@@ -1,7 +1,7 @@
 {
   "name": "mongox",
   "version": "0.1.0",
-  "description": "mongodb driver extension for compressing document key string",
+  "description": "A wrapper of Node.js mongoDB driver with document key compression",
   "main": "index.js",
   "dependencies": {
     "mongodb": "^2.0.23"
@@ -18,8 +18,8 @@
     "url": "no yet"
   },
   "keywords": [
-    "mongodb",
-    "compress",
+    "nodejs",
+    "mongodb key compression",
     "mongo performance",
     "mongo io utilization"
   ],
