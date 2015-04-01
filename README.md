@@ -2,7 +2,7 @@
 A wrapper of Node.js mongoDB driver with document key compression
 
 ## examples
-####Code:
+#### Code:
 ```
 var mongodb = require('mongodbx');
 mongodb.mongodbx.initialize({
@@ -23,13 +23,13 @@ db.open(function(err, db){
     });
 });
 ```
-####Will print:
+#### Will print:
 ```
 [tong@localhost mongodbx]$ node test.js
 null [{_id: 551b6c63ee8ff65407e59847, name: 'name', expireTime: Wed Apr 01 2015 11:56:19 GMT+0800 (SGT), deleteFlag: true, notConfiguredKey: 'ext'}]
 
 ```
-####Within mongo shell:
+#### Within mongo shell:
 ```
 rs0:PRIMARY> db.mongodbxTest.find()
 {"_id": ObjectId("551b6c63ee8ff65407e59847"), "n": "name", "e": ISODate("2015-04-01T03:56:19.625Z"), "d": true, "notConfiguredKey": "ext"}
@@ -47,7 +47,7 @@ To optimise mongodb's storage && be friendly to code/design, we can put a middle
 * Performance: about 250ms to compress/decompress 10k documents(Core i7 3.40GHZ).
 
 ## Api spec
-####mongodbx.initialize(params)
+#### mongodbx.initialize(params)
 * params.collections (Object)
   -params.collections[].enableCompact (Boolean, default: params.debug). collection level compress config.
   -params.collections[].columns (Array/Object).
@@ -78,10 +78,10 @@ mongodb.mongodbx.initialize({
 });
 ```
 
-####mongodbx.addCollection(collectionName, params)
+#### mongodbx.addCollection(collectionName, params)
 * params. see mongodbx.initialize params.collections[]
 
-####mongodbx.getColumnNameMap = function(collectionName);
+#### mongodbx.getColumnNameMap = function(collectionName);
 ```
 console.log(mongodb.mongodbx.getColumnNameMap('mongodbxTest'));
 ```
@@ -90,7 +90,7 @@ Will print:
 { name: 'n', expireTime: 'e', deleteFlag: 'd' }
 ```
 
-####mongodbx.translateToCompact(inputStr, collectionName)
+#### mongodbx.translateToCompact(inputStr, collectionName)
 ```
 console.log('Map translate normal:', mongodb.mongodbx.translateToCompact('name', 'mongodbxTest'));
 console.log('Map translate notConfiguredKey:', mongodb.mongodbx.translateToCompact('notConfiguredKey', 'mongodbxTest'));
@@ -110,7 +110,7 @@ Base62 translate 3rd Key: c
 Base62 translate notConfiguredKey: notConfiguredKey
 ```
 
-####mongodbx.translateToOriginal(encodeStr, collectionName)
+#### mongodbx.translateToOriginal(encodeStr, collectionName)
 ```
 console.log('Map translate normal:', mongodb.mongodbx.translateToOriginal('n', 'mongodbxTest'));
 console.log('Map translate notConfiguredKey:', mongodb.mongodbx.translateToOriginal('notConfiguredKey', 'mongodbxTest'));
