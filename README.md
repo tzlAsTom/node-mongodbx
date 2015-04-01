@@ -35,15 +35,15 @@ rs0:PRIMARY> db.mongodbxTest.find()
 ```
 
 ## Background
-As a key-value database, one fault of mongodb is to saving the key string for each document. This will cost a lot of IO resources. For example, a collection with column named 'deleteFlag', mongodb need extra 11 bytes for key string storage comparing relational database.--The value itself('true'/'false') only need 1 byte to stroge!
+As a key-value database, one fault of mongodb is to saving the key string for each document. This will cost a lot of IO resources. For example, a collection with column named 'deleteFlag', mongodb need extra 11 bytes for key string storage comparing relational database.--The value itself('true'/'false') only need 1 byte!
 
 There do have a 'best pratice' for this: shorten the key string. For 'deleteFlag', design/code with 'fdel', even 'd'. However, this solution will cause some software nightmare. The code's maintainability && readability will be compromised.
 
-To optimise mongodb's storage && be friendly to code/design, we can put a middleware between our application and mongodb driver. The middleware will translate document bidirection. For example, {deleteFlag: true}(application model) <=> {d: true}(mongodb document).
+To optimise mongodb's storage && be friendly to code/design, we can put a middleware between our application and mongodb driver. The middleware will translate document bi-direction. For example, {deleteFlag: true}(application model) <=> {d: true}(mongodb document).
 
 ## Test status
-*Pass all test cases in [mongodb driver](https://github.com/mongodb/node-mongodb-native.git)(driver version: 2.0.25, server version: 3.0.1).
-*Performance: cost about 250ms to compress/decompress 10k documents.
+* Pass all test cases in [mongodb driver](https://github.com/mongodb/node-mongodb-native.git)(driver version: 2.0.25, server version: 3.0.1).
+* Performance: cost about 250ms to compress/decompress 10k documents.
 
 ## Api spec
 
