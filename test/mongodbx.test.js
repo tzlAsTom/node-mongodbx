@@ -111,16 +111,16 @@ describe("mongodbx main", function(){
         it("compress collection", function(){
             mongodbx.initialize(config);
             should.deepEqual(mongodbx.translateRecordToCompact(orignalRecord, 'mongodbxTest'), compactRecord);
-            should.deepEqual(mongodbx.translateRecordToOrignal(compactRecord, 'mongodbxTest'), orignalRecord);
+            should.deepEqual(mongodbx.translateRecordToOriginal(compactRecord, 'mongodbxTest'), orignalRecord);
 
             should.deepEqual(mongodbx.translateRecordToCompact(orignalRecordBase62, 'mongodbxTestBase62Map'), compactRecordBase62);
-            should.deepEqual(mongodbx.translateRecordToOrignal(compactRecordBase62, 'mongodbxTestBase62Map'), orignalRecordBase62);
+            should.deepEqual(mongodbx.translateRecordToOriginal(compactRecordBase62, 'mongodbxTestBase62Map'), orignalRecordBase62);
         });
 
         it("no compress collection", function(){
             mongodbx.initialize(config);
             should.deepEqual(mongodbx.translateRecordToCompact(orignalRecord, 'noCompactCol'), orignalRecord);
-            should.deepEqual(mongodbx.translateRecordToOrignal(compactRecord, 'noCompactCol'), compactRecord);
+            should.deepEqual(mongodbx.translateRecordToOriginal(compactRecord, 'noCompactCol'), compactRecord);
         });
 
         describe("translate query selector", function(){
@@ -178,29 +178,84 @@ describe("mongodbx main", function(){
         });
     });
 
+    describe("performance test", function(){
+        it("map", function(){
+            var oriRecord = []
+            for(var i = 0; i < 100000; i++){
+                oriRecord.push({_id: 1, name: 1, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4});
+            }
+
+            console.time('compress');
+            var compactRecord = mongodbx.translateRecordToCompact(oriRecord, 'mongodbxTest');
+            console.timeEnd('compress');
+
+            console.time('decompress');
+            var deCompactRecord = mongodbx.translateRecordToOriginal(compactRecord, 'mongodbxTest');
+            console.timeEnd('decompress');
+
+            should.ok(true);
+        });
+
+        it("base62", function(){
+            var oriRecord = []
+            for(var i = 0; i < 100000; i++){
+                oriRecord.push({_id: 1, name: 1, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4});
+            }
+
+            console.time('compress');
+            var compactRecord = mongodbx.translateRecordToCompact(oriRecord, 'mongodbxTestBase62Map');
+            console.timeEnd('compress');
+
+            console.time('decompress');
+            var deCompactRecord = mongodbx.translateRecordToOriginal(compactRecord, 'mongodbxTestBase62Map');
+            console.timeEnd('decompress');
+
+            should.ok(true);
+        });
+    });
+
     describe("all mongodb api", function(){
         it("todo", function(){
             var mongodbx = require('../lib/mongodbx');
             mongodbx.initialize(config);
 
             //should.fail('todo');
+/*
+git clone https://github.com/mongodb/node-mongodb-native.git
+cd node-mongodb-native
+npm install
+vi test/runner.js LINE 50
+    var Configuration = function(context) {
+        var mongo = require('../index.js');
+=>
+    var Configuration = function(context) {
+        var mongo = require('../index.js');
+        mongo.mongodbx = require('../../mongodbx/lib/mongodbx');
+
+        mongo.mongodbx.initialize({
+            'collections': {
+                'test_find_simple': {
+                    columns: {'a': 'b', b: 'a',  'deleteFlag': 'd'},
+                    enableCompact: true,
+                }
+            },
+            //debug: true,
+        });
+
+cd ../mongodbx
+vi lib/mongodbx.js LINE 3
+    var mongodb = require('mongodb');
+    //for compatibility test with mongodb driver
+    //var mongodb = require('../../node-mongodb-native/index.js');
+=>
+    var mongodb = require('mongodb');
+    //for compatibility test with mongodb driver
+    var mongodb = require('../../node-mongodb-native/index.js');
+
+    [tong@localhost node-mongodb-native]$ node test/runner.js -t functional
+
+*/
         });
     });
 
 });
-
-
-
-// var db = new mongodb.Db('test', new mongodb.Server('localhost', 27017));
-// db.open(function(err, db){
-//     var collection = db.collection("mongodbxTest");
-// //     collection.insert([record, record], {w:1}, function(err, result){
-// //         console.log(err, result);
-// //     });
-//
-//
-// var queryObj = {name: 2};
-//     collection.find(queryObj).toArray(function(err, result){
-//         console.log(err, queryObj, result);
-//     });
-// });
