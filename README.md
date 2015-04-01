@@ -1,4 +1,4 @@
-# mongodbx(not ready yet)
+# mongodbx
 A wrapper of Node.js mongoDB driver with document key compression
 
 ## examples
@@ -35,7 +35,7 @@ rs0:PRIMARY> db.mongodbxTest.find()
 ```
 
 ## Background
-As a key-value database, one fault of mongodb is to saving the key string for each document. This will cost a lot of IO resources. For example, a collection with column named 'deleteFlag', mongodb need extra 11 bytes for key string storage comparing relational database.--The value itself('true'/'false') only need 1 byte!
+As a key-value database, one fault of mongodb is to store the key string for each document. This will cost a lot of IO resources. For example, a collection with column named 'deleteFlag', mongodb need 11 bytes for key string storage --The value itself(true/false) only need 1 byte!
 
 There do have a 'best pratice' for this: shorten the key string. For 'deleteFlag', design/code with 'fdel', even 'd'. However, this solution will cause some software nightmare. The code's maintainability && readability will be compromised.
 

@@ -1,6 +1,6 @@
 {
   "name": "mongodbx",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A wrapper of Node.js mongoDB driver with document key compression",
   "main": "index.js",
   "dependencies": {
@@ -15,10 +15,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "no yet"
+    "url": "https://github.com/tzlAsTom/node-mongodbx"
   },
   "keywords": [
-    "nodejs",
     "mongodb key compression",
     "mongo performance",
     "mongo io utilization"
