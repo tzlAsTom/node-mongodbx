@@ -1,6 +1,6 @@
 {
   "name": "mongodbx",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A wrapper of Node.js mongoDB driver with document key compression",
   "main": "index.js",
   "dependencies": {
