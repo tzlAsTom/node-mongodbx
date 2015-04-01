@@ -4,8 +4,7 @@ A wrapper of Node.js mongoDB driver with document key compression
 ## examples
 ####Code:
 ```
-//var mongodb = require('mongodbx');
-var mongodb = require('./index.js');
+var mongodb = require('mongodbx');
 
 mongodb.mongodbx.initialize({
     'collections': {
@@ -29,24 +28,23 @@ db.open(function(err, db){
 ####Will print:
 ```
 [tong@localhost mongodbx]$ node test.js
-null [{_id: 5514f11dbc6aa25f2d165e8c, name: 99, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4 }]
+[tong@localhost mongodbx]$ node test.js
+null [{_id: 551b6822c07e9fb46efac201, name: 99, expireTime: 2, deleteFlag: 3, notConfiguredKey: 4}]
+
 ```
 
 ####Within mongo shell:
 ```
 rs0:PRIMARY> db.mongodbxTest.find()
-{ "_id" : ObjectId("5514f11dbc6aa25f2d165e8c"), "n" : 99, "e" : 2, "d" : 3, "notConfiguredKey" : 4 }
-rs0:PRIMARY>
+{"_id": ObjectId("551b6822c07e9fb46efac201"), "n": 99, "e": 2, "d": 3, "notConfiguredKey": 4}
 ```
 
 ## Background
 
-## API
+## Test status
 
-## not ready yet
+## Api spec
 
-## bad side
-
-## known issues
+## Known issues
 
 ## look into the future
