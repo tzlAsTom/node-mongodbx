@@ -4,6 +4,7 @@ A wrapper of Node.js mongoDB driver with document key compression
 ## examples
 ####Code:
 ```
+var mongodb = require('mongodbx');
 mongodb.mongodbx.initialize({
     'collections': {
         'mongodbxTest': {
