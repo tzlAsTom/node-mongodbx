@@ -18,9 +18,10 @@
     "url": "https://github.com/tzlAsTom/node-mongodbx"
   },
   "keywords": [
+    "mongodb",
     "mongodb key compression",
-    "mongo performance",
-    "mongo io utilization"
+    "mongodb performance",
+    "mongodb io utilization"
   ],
   "author": "Tom <tong.zhilian@gmail.com>",
   "license": "GPL-3.0"
