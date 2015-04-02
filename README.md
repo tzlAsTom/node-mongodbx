@@ -135,6 +135,7 @@ Base62 translate notConfiguredKey: notConfiguredKey
 * mongodb.Collection.mapReduce not supported
 * mongodb.Collection.group not supported
 * mongodb.Collection.find $where not supported
+* embeded-document's key compress not supported
 
 ## Todo
 With mongodbx, application can get tranlated record. But if we use mongodb shell, the output is still less-readability. Try to solve this...
