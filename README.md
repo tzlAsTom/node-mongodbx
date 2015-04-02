@@ -49,8 +49,8 @@ To optimise mongodb's storage && be friendly to code/design, we can put a middle
 ## Api spec
 #### mongodbx.initialize(params)
 * params.collections (Object)
-  - params.collections[].enableCompact (Boolean, default: params.debug). collection level compress config.
-  - params.collections[].columns (Array/Object).
+  * params.collections[].enableCompact (Boolean, default: params.debug). collection level compress config.
+  * params.collections[].columns (Array/Object).
     * Object: translate map;
     * Array: using base62(a-z, A-Z, 0-9) to compress, the compressed value is key's index in columns array. Make sure this array is append only.
 * params.enableCompact (Boolean, default:false). Global compress config.
