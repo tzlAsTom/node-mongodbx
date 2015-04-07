@@ -214,6 +214,15 @@ describe("mongodbx main", function(){
         });
     });
 
+    describe("aggregate", function(){
+        it('translate', function(){
+            should.deepEqual(mongodbx.aggregateTranslateExpressionToCompact({ _id : "$name", books: { $push: "$deleteFlag" } }, 'mongodbxTest')
+                            , { _id: '$n', books: { '$push': '$d' } });
+            should.deepEqual(mongodbx.aggregateTranslateExpressionToCompact({ name : "$name", deleteFlag: { $gte: 1 }, year: { $year: "$expireTime" }, mark:{$literal:'$expireTime'} }, 'mongodbxTest'),
+                            { name: '$n',  deleteFlag: { '$gte': 1 },  year: { '$year': '$e' },  mark: { '$literal': '$expireTime' } });
+        });
+    });
+
     describe("all mongodb api", function(){
         it("todo", function(){
             var mongodbx = require('../lib/mongodbx');
@@ -228,19 +237,39 @@ vi test/runner.js LINE 50
     var Configuration = function(context) {
         var mongo = require('../index.js');
 =>
-    var Configuration = function(context) {
-        var mongo = require('../index.js');
-        mongo.mongodbx = require('../../mongodbx/lib/mongodbx');
+    var mongodbx = require('../../mongodbx/lib/mongodbx');
 
-        mongo.mongodbx.initialize({
-            'collections': {
-                'test_find_simple': {
-                    columns: {'a': 'b', b: 'a',  'deleteFlag': 'd'},
-                    enableCompact: true,
-                }
+    mongodbx.initialize({
+        'collections': {
+            'test_find_simple': {
+                columns: {'a': 'b', b: 'a',  'deleteFlag': 'd'},
             },
-            //debug: true,
-        });
+            'shouldCorrectlyExecuteSimpleAggregationPipelineUsingArray': {
+                columns: {title: 't', pageViews: 'pv', tags: 't', comments: 'c'},
+            },
+            'shouldCorrectlyExecuteSimpleAggregationPipelineUsingArguments': {
+                columns: {title: 't', pageViews: 'pv', tags: 't', comments: 'c'},
+            },
+            'shouldCorrectlyDoAggWithCursorGet': {
+                columns: {title: 't', pageViews: 'pv', tags: 't', comments: 'c'},
+            },
+            'shouldCorrectlyDoAggWithCursorGetStream': {
+                columns: {title: 't', pageViews: 'pv', tags: 't', comments: 'c'},
+            },
+            'shouldCorrectlyDoAggWithCursorMaxTimeMSSet': {
+                columns: {title: 't', pageViews: 'pv', tags: 't', comments: 'c'},
+            },
+            'te.st': {
+                columns: {'a': 'b'},
+            },
+            'shouldPerformSimpleGroupAggregation': {
+                columns: {'a': 'b'},
+            },
+        },
+        //debug: true,
+        enableCompact: true,
+        mongodb: mongo,
+    });
 
 cd ../mongodbx
 vi lib/mongodbx.js LINE 3

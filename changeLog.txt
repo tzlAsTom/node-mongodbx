@@ -1,4 +1,6 @@
 
 
+[2015-4-7]v1.2.0 add support for aggregate
+[2015-4-7]v1.2.0 add support for user-specified mongodb driver
 
-[2015-4-1]version 1.0.0 released
+[2015-4-1]v1.0.0 released

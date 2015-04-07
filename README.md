@@ -55,6 +55,7 @@ To optimise mongodb's storage && be friendly to code/design, we can put a middle
     * Array: using base62(a-z, A-Z, 0-9) to compress, the compressed value is key's index in columns array. Make sure this array is append only.
 * params.enableCompact (Boolean, default:false). Global compress config.
 * params.debug (Boolean, default:false).
+* params.mongodb mongodb driver object(require('mongodb')). For those don't want embedded mongodb driver.
 ```
 mongodb.mongodbx.initialize({
     'collections': {
@@ -75,6 +76,15 @@ mongodb.mongodbx.initialize({
         },
     },
     enableCompact: true
+});
+
+#Specify you mongodb driver
+var mongodb = require('mongodb');
+require('mongodbx').initialize({
+    collections: ...
+    mongodb: mongodb,
+});
+mongodb.mongodbx.[Api]
 });
 ```
 
@@ -131,7 +141,6 @@ Base62 translate notConfiguredKey: notConfiguredKey
 ```
 
 ## Known issues
-* mongodb.Collection.aggregate not supported
 * mongodb.Collection.mapReduce not supported
 * mongodb.Collection.group not supported
 * mongodb.Collection.find $where not supported
